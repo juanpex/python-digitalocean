@@ -58,10 +58,11 @@ class Tag(BaseAPI):
             type=PUT,
             params=input_params
         )
-
         if data:
-            self.name = data['name']
-            self.resources = data['resources']
+            self.name = data['tag']['name']
+            self.resources = data['tag']['resources']
+
+        return self
 
     def destroy(self):
         """
