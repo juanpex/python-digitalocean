@@ -53,11 +53,18 @@ class Tag(BaseAPI):
         if input_params['name'] == self.name:
             return
 
-        data = self.get_data(
-            "tags/%s" % self.name,
-            type=PUT,
-            params=input_params
-        )
+        try:
+            data = self.get_data(
+                "tags/%s" % self.name,
+                type=PUT,
+                params=input_params
+            )
+        except:
+            pass
+
+        self.name = name
+        data = self.load()
+
         if data:
             self.name = data['tag']['name']
             self.resources = data['tag']['resources']
