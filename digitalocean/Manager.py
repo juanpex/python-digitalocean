@@ -14,6 +14,7 @@ from .SSHKey import SSHKey
 from .Action import Action
 from .Account import Account
 from .FloatingIP import FloatingIP
+from .Tag import Tag
 
 
 class Manager(BaseAPI):
@@ -196,7 +197,6 @@ class Manager(BaseAPI):
         images = self.get_images(type='distribution')
         return images
 
-
     def get_app_images(self):
         """
             This function returns a list of Image objectobjects representing
@@ -204,7 +204,6 @@ class Manager(BaseAPI):
         """
         images = self.get_images(type='application')
         return images
-
 
     def get_all_domains(self):
         """
@@ -265,6 +264,21 @@ class Manager(BaseAPI):
             Returns a of FloatingIP object by its IP address.
         """
         return FloatingIP.get_object(api_token=self.token, ip=ip)
+
+    def get_all_tags(self):
+        data = self.get_data("tags/")
+        tags = list()
+        for jsoned in data['tags']:
+            tag = Tag(**jsoned)
+            tag.token = self.token
+            tags.append(tag)
+        return tags
+
+    def get_tag(self, name):
+        """
+            Return a Tag by its name.
+        """
+        return Tag.get_object(api_token=self.token, name=name)
 
     def __str__(self):
         return "%s" % (self.token)

@@ -19,4 +19,5 @@ from .Record import Record
 from .SSHKey import SSHKey
 from .Kernel import Kernel
 from .FloatingIP import FloatingIP
+from .Tag import Tag
 from .baseapi import Error, TokenError, DataReadError

@@ -6,6 +6,7 @@ from .Image import Image
 from .Kernel import Kernel
 from .baseapi import BaseAPI, Error, GET, POST, DELETE
 from .SSHKey import SSHKey
+from .Tag import Tag
 
 
 class DropletError(Error):
@@ -86,6 +87,7 @@ class Droplet(BaseAPI):
         self.ipv6 = None
         self.private_networking = None
         self.user_data = None
+        self.tags = []
 
         # This will load also the values passed
         super(Droplet, self).__init__(*args, **kwargs)
@@ -267,7 +269,8 @@ class Droplet(BaseAPI):
         Returns dict or Action
         """
         options = {"type": "resize", "size": new_size_slug}
-        if disk: options["disk"] = "true"
+        if disk:
+            options["disk"] = "true"
 
         return self._perform_action(options, return_dict)
 
@@ -471,7 +474,7 @@ class Droplet(BaseAPI):
             else:
                 raise BadSSHKeyFormat(
                     "Droplet.ssh_keys should be a list of IDs, public keys"
-                    + " or fingerprints."
+                    " or fingerprints."
                 )
 
         return ssh_keys_id
@@ -580,6 +583,16 @@ class Droplet(BaseAPI):
                 break
 
         return kernels
+
+    def get_tags(self):
+        tags = list()
+        for name in self.tags:
+            tag = Tag()
+            tag.name = name
+            tag.token = self.token
+            tag.load()
+            tags.append(tag)
+        return tags
 
     def __str__(self):
         return "%s %s" % (self.id, self.name)
